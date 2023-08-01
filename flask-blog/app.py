@@ -1,4 +1,15 @@
 from flask import Flask, render_template
+import sqlite3
+import os
+
+if "mydb.db" not in os.listdir():
+    conn = sqlite3.connect("mydb.db")
+    db = conn.cursor()
+    
+    db.execute("CREATE TABLE posts (title TEXT, content TEXT, \
+        date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)")
+    conn.commit()
+    conn.close()
 
 app = Flask(__name__)
 
@@ -13,3 +24,4 @@ def display_posts():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
