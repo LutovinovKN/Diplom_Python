@@ -1,10 +1,18 @@
 {% extends 'base.html' %}
 {% block title %} Posts {% endblock %}
+
 {% block body %}
-        <div class="main-container">
-                        <h1>First post</h1>
-                        <div> posted on: 31th of jule 2023</div>
-                        <div>this is  the first blog post</div>
-                        <hr>
-        </div>
+
+<div class="main-container">
+    {% for post in posts %}
+        <a style="text-decoration: none; color: black;"href="{{ url_for('display_post', post_id=post[3]) }}"><h1>{{ post[0] }}</h1>
+        <div> posted on:{{ post[2] }}</div>
+        <div>{{ post[1] }}</div>
+        <hr>
+    {% endfor %}
+
+</div>
+
 {% endblock %}
+
+
