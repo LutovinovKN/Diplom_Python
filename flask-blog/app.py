@@ -3,6 +3,7 @@ import sqlite3
 import os
 from flask.helpers import flash, url_for
 # print(os.listdir())
+# База данных
 if  "mydb.db" not in os.listdir():
         conn = sqlite3.connect("mydb.db")
         db = conn.cursor()
@@ -13,8 +14,8 @@ if  "mydb.db" not in os.listdir():
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret key"
 
-@app.route('/create', methods=["GET", "POST"]) # Allowing Post requests
-
+@app.route('/create/', methods=["GET", "POST"]) # Разрешение на запрос
+# Создание поста
 def create_post():
     if request.method.upper() == "POST":
         title = request.form.get("title")
@@ -35,11 +36,12 @@ def create_post():
         return redirect(url_for("display_posts")) # redirect user
     return render_template("create.html")
 
-@app.route("/")
+@app.route("/",  methods=["GET", "POST"])
 def main():
         return render_template("index.html")
 
-@app.route("/posts")
+# Показывает все посты
+@app.route("/posts/",  methods=["GET", "POST"])
 def display_posts():
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
@@ -49,6 +51,7 @@ def display_posts():
         conn.close()
         return render_template("posts.html", posts=posts)  # Passing the posts variable ( which is a list ) to the front-end so that jinja2 can loop over it and display all the posts
 
+# Показывает один определённый пост
 @app.route("/posts/<int:post_id>")
 def display_post(post_id):
     conn = sqlite3.connect("mydb.db")
@@ -57,6 +60,7 @@ def display_post(post_id):
 
     return render_template("post.html", post=post, post_id=post_id)
 
+# Удаляет пост
 @app.route("/posts/<int:post_id>/delete")
 def delete_post(post_id):
     conn = sqlite3.connect("mydb.db")
@@ -65,6 +69,28 @@ def delete_post(post_id):
     conn.commit()
 
     return redirect(url_for("display_posts"))
+
+# Редактирование пост
+@app.route("/posts/<int:post_id>/edit", methods=["POST", "GET"])
+def edit_post(post_id):
+    conn = sqlite3.connect("mydb.db")
+    cur = conn.cursor()
+    post = cur.execute("SELECT * FROM posts WHERE rowid = ?", (str(post_id))).fetchone()
+
+    if request.method.upper() == "POST":
+        title = request.form.get("title")
+        content = request.form.get("content")
+
+        if title == None or content == None or title.strip() == "" or content.strip() == "":
+            flash("Please fill all the fields")
+            return render_template("edit.html", post=post)
+
+        cur.execute("UPDATE posts SET title = ?, content = ? WHERE rowid = ?", (title, content, post_id))
+        conn.commit()
+
+        return redirect(url_for("display_posts"))
+
+    return render_template("edit.html", post=post)
 
 if __name__ == "__main__":
     app.run(debug=True)

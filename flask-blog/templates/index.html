@@ -6,7 +6,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
 </head>
-<body>
-        <h1>Flask Blog app</h1>
-</body>
+{% extends 'base.html' %}
+{% block title %} Index {% endblock %}
+{% block body %}
+        <div style="text-align: center;">
+                <h1>Напиши свою новость</h1>
+        </div>
+        
+        <div style="text-align: center;">
+                <form action="/create/" method="POST">
+                        <a href="create.html">
+                                <button class="favorite styled" type="submit">Добавить новость</button>
+                        </a>
+                </form>
+        </div>
+        <div style="text-align: center;">
+                <form action="/posts/" method="POST">
+                        <a href="posts.html">
+                                <button class="favorite styled" type="submit">Посмотреть все новости</button>
+                        </a>
+                </form>
+        </div>
+{% endblock %}
 </html>

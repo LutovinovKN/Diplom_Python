@@ -2,15 +2,24 @@
 {% block title %} Posts {% endblock %}
 
 {% block body %}
+<!-- Кнопка -->
+<div style="text-align: right;">
+    <form action="/create/" method="POST">
+        <a href="create.html">
+                <button class="favorite styled" type="submit">Добавить новость</button>
+        </a>
+</form>
+</div>
 
+<!-- Посты -->
 <div class="main-container">
     {% for post in posts %}
         <a style="text-decoration: none; color: black;"href="{{ url_for('display_post', post_id=post[3]) }}"><h1>{{ post[0] }}</h1>
-        <div> posted on:{{ post[2] }}</div>
+        <div> опубликовано:{{ post[2] }}</div>
         <div>{{ post[1] }}</div>
         <hr>
     {% endfor %}
-
+    
 </div>
 
 {% endblock %}
