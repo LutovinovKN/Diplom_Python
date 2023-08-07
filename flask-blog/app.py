@@ -62,7 +62,12 @@ def edit_post(post_id):
         title = request.form.get("title")
         content = request.form.get("content")
 
-        if title == None or content == None or title.strip() == "" or content.strip() == "":
+        if (
+            title is None
+            or content is None
+            or title.strip() == ""
+            or content.strip() == ""
+        ):
             flash("Please fill all the fields")
             return render_template("edit.html", post=post)
         Db().edit_post(title, content, post_id)
