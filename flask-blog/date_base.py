@@ -2,6 +2,7 @@ from flask import request, Flask, render_template, redirect
 import sqlite3
 import os
 from flask.helpers import flash, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 
 class Db():
@@ -17,11 +18,10 @@ class Db():
     
     @staticmethod
     def display_post(post_id):
-        """получение поста по id
-
+        """
+        получение поста по id
         Args:
             post_id (_type_): id поста
-
         """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
@@ -31,6 +31,9 @@ class Db():
         return post
     
     def display_posts(self):
+        """
+        Показывает на экране все созданные посты
+        """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         cur.execute("SELECT *, rowid FROM posts") # Getting all the posts from the sqlite3 database
@@ -40,6 +43,12 @@ class Db():
         return posts
     
     def create_post(self, title, content):
+        """
+        Показывает один определённый пост
+        Args:
+            title (_type_): Заголовок
+            content (_type_): Текст поста
+        """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         # Adding the post to the database
@@ -50,6 +59,11 @@ class Db():
     
     @staticmethod   
     def delete_post(post_id):
+        """удаляет определённый пост по id
+
+        Args:
+            post_id (_type_): id поста
+        """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         cur.execute("DELETE FROM posts WHERE rowid = ?", (str(post_id)))
@@ -59,10 +73,16 @@ class Db():
         
     @staticmethod
     def edit_post(title, content, post_id):
+        """Корректировка поста
+
+        Args:
+            title (_type_): Заголовок
+            content (_type_): Текст поста
+            post_id (_type_): id поста
+        """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         cur.execute("UPDATE posts SET title = ?, content = ? WHERE rowid = ?", (title, content, post_id))
-        conn.commit()
-        
+        conn.commit()        
         cur.close()
         conn.close()

@@ -1,5 +1,6 @@
 from flask import request, Flask, render_template, redirect
 from date_base import Db
+from config import Config
 from flask.helpers import flash, url_for
 
 
@@ -9,7 +10,8 @@ def date_base():
     return db.db()
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "secret key"
+app.config.from_object(Config)
+app.config["SECRET_KEY"] = "secret key" #! Убрать?
 
 @app.route("/",  methods=["GET", "POST"])
 def main():
@@ -30,7 +32,7 @@ def create_post():
         or content.strip() == ""
     ):
         # flashes a message to tell the user to fill all the fields
-        flash("Please fill all the fields")
+        flash("Пожалуйста, заполните все поля")
         return render_template("create.html")
     Db().create_post(title, content)
     return redirect(url_for("display_posts"))
@@ -42,19 +44,19 @@ def display_posts():
     return render_template("posts.html", posts=posts)
 
 # Показывает один определённый пост
-@app.route("/posts/<int:post_id>")
+@app.route("/posts/<int:post_id>/")
 def display_post(post_id):
     post = Db().display_post(post_id)
     return render_template("post.html", post=post, post_id=post_id)
 
 # Удаляет пост
-@app.route("/posts/<int:post_id>/delete")
+@app.route("/posts/<int:post_id>/delete/")
 def delete_post(post_id):
     Db().delete_post(post_id)
     return redirect(url_for("display_posts"))
 
 # Редактирование пост
-@app.route("/posts/<int:post_id>/edit", methods=["POST", "GET"])
+@app.route("/posts/<int:post_id>/edit/", methods=["POST", "GET"])
 def edit_post(post_id):
     post = Db().display_post(post_id)
 
@@ -73,6 +75,7 @@ def edit_post(post_id):
         Db().edit_post(title, content, post_id)
         return redirect(url_for("display_posts"))
     return render_template("edit.html", post=post)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
