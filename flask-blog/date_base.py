@@ -86,3 +86,4 @@ class Db():
         conn.commit()        
         cur.close()
         conn.close()
+        

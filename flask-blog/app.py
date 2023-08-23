@@ -1,6 +1,7 @@
 from flask import request, Flask, render_template, redirect
 from date_base import Db
 from config import Config
+from forms import LoginForm
 from flask.helpers import flash, url_for
 
 
@@ -11,7 +12,7 @@ def date_base():
 
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config["SECRET_KEY"] = "secret key" #! Убрать?
+# app.config["SECRET_KEY"] = "secret key" #! Убрать?
 
 @app.route("/",  methods=["GET", "POST"])
 def main():
@@ -76,6 +77,12 @@ def edit_post(post_id):
         return redirect(url_for("display_posts"))
     return render_template("edit.html", post=post)
 
+@app.route('/login',  methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Sign In', form=form)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
