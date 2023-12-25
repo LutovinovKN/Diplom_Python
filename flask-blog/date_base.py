@@ -36,8 +36,8 @@ class Db():
         """
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
-        cur.execute("SELECT *, rowid FROM posts") # Getting all the posts from the sqlite3 database
-        posts = cur.fetchall() # fetching all the posts from the database and assigning them to the posts variable
+        cur.execute("SELECT *, rowid FROM posts") # Получение всех записей из базы данных sqlite3
+        posts = cur.fetchall() # извлекаем все записи из базы данных и присваиваем их переменной posts
         cur.close()
         conn.close()
         return posts
